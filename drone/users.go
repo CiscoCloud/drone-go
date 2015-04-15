@@ -24,10 +24,10 @@ func (s *UserService) GetCurrent() (*User, error) {
 }
 
 // POST /api/users/{host}/{login}
-func (s *UserService) Create(remote, login string) (*User, error) {
+func (s *UserService) Create(remote, login string, in interface{}) (*User, error) {
 	var path = fmt.Sprintf("/api/users/%s/%s", remote, login)
 	var user = User{}
-	var err = s.run("POST", path, nil, &user)
+	var err = s.run("POST", path, in, &user)
 	return &user, err
 }
 

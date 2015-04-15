@@ -12,6 +12,7 @@ type User struct {
 	Syncing  bool   `json:"syncing"`
 	Created  int64  `json:"created_at"`
 	Updated  int64  `json:"updated_at"`
+	Token    string `json:"token"`
 }
 
 type Repo struct {
