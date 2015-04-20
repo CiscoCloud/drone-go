@@ -23,7 +23,7 @@ func (s *UserService) GetCurrent() (*User, error) {
 	return &user, err
 }
 
-// GET /api/user/sync
+// POST /api/user/sync
 func (s *UserService) Sync() error {
 	var err = s.run("POST", "/api/user/sync", nil, nil)
 	return err
