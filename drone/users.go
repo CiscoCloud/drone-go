@@ -23,6 +23,12 @@ func (s *UserService) GetCurrent() (*User, error) {
 	return &user, err
 }
 
+// GET /api/user/sync
+func (s *UserService) Sync() error {
+	var err = s.run("POST", "/api/user/sync", nil, nil)
+	return err
+}
+
 // POST /api/users/{host}/{login}
 func (s *UserService) Create(remote, login string, in interface{}) (*User, error) {
 	var path = fmt.Sprintf("/api/users/%s/%s", remote, login)
