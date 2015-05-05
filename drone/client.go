@@ -14,10 +14,10 @@ type Client struct {
 	token string
 	url   string
 
-	Commits *CommitService
-	Repos   *RepoService
-	Users   *UserService
-  HttpClient *http.Client
+	Commits    *CommitService
+	Repos      *RepoService
+	Users      *UserService
+	HttpClient *http.Client
 }
 
 func NewClient(token, url string, client *http.Client) *Client {
@@ -29,10 +29,10 @@ func NewClient(token, url string, client *http.Client) *Client {
 	c.Commits = &CommitService{&c}
 	c.Repos = &RepoService{&c}
 	c.Users = &UserService{&c}
-  if client == nil {
-    client = http.DefaultClient
-  }
-  c.HttpClient = client
+	if client == nil {
+		client = http.DefaultClient
+	}
+	c.HttpClient = client
 	return &c
 }
 
@@ -149,7 +149,7 @@ func (c *Client) do(method, path string) (*http.Response, error) {
 	req.ContentLength = 0
 
 	// make the request using the default http client
-  resp, err := c.HttpClient.Do(req)
+	resp, err := c.HttpClient.Do(req)
 
-  return resp, err
+	return resp, err
 }
