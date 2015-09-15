@@ -11,8 +11,9 @@ import (
 )
 
 type Client struct {
-	token string
-	url   string
+	token      string
+	url        string
+	isServer04 bool
 
 	Commits    *CommitService
 	Repos      *RepoService
@@ -34,6 +35,12 @@ func NewClient(token, url string, client *http.Client) *Client {
 	}
 	c.HttpClient = client
 	return &c
+}
+
+func NewClient04(token string, url string, client *http.Client) *Client {
+	c := NewClient(token, url, client)
+	c.isServer04 = true
+	return c
 }
 
 var (
