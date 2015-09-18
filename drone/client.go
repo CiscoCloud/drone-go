@@ -82,17 +82,29 @@ func (c *Client) run(method, path string, in, out interface{}) error {
 
 	// if data input is provided, serialize to JSON
 	if in != nil {
-		inJson, err := json.Marshal(in)
-		if err != nil {
-			return err
+		formIn, ok := in.(map[string]string)
+		var buf *bytes.Buffer]
+		var contentType string
+		if c.isServer04 && ok {
+			contentType = "application/x-www-form-urlencoded"
+			data := url.Values{}
+			for key, val := range formIn {
+				data.Set(key, val)
+			}
+			buf = bytes.NewBufferString(data.Encode())
+		} else {
+			contentType = "application/json"
+			inJson, err := json.Marshal(in)
+			if err != nil {
+				return err
+			}
+			buf = bytes.NewBuffer(inJson)
 		}
 
-		buf := bytes.NewBuffer(inJson)
 		req.Body = ioutil.NopCloser(buf)
-
-		req.ContentLength = int64(len(inJson))
-		req.Header.Set("Content-Length", strconv.Itoa(len(inJson)))
-		req.Header.Set("Content-Type", "application/json")
+		req.ContentLength = int64(buf.Len())
+		req.Header.Set("Content-Length", strconv.Itoa(buf.Len()))
+		req.Header.Set("Content-Type", contentType)
 	}
 
 	// make the request using the default http client
