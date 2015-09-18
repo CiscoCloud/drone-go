@@ -83,7 +83,7 @@ func (c *Client) run(method, path string, in, out interface{}) error {
 	// if data input is provided, serialize to JSON
 	if in != nil {
 		formIn, ok := in.(map[string]string)
-		var buf *bytes.Buffer]
+		var buf *bytes.Buffer
 		var contentType string
 		if c.isServer04 && ok {
 			contentType = "application/x-www-form-urlencoded"
