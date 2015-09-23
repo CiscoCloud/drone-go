@@ -31,7 +31,7 @@ func (s *RepoService) Create(owner, name string) (*Repo, error) {
 	if !s.isServer04 {
 		return nil, errors.New("No create repos method before Drone 0.4")
 	}
-	path := fmt.Sprintf("/api/repos/%s/%s", owner, name)
+	path := fmt.Sprintf("/api/repos/%s/%s?no-activate=true", owner, name)
 	var result = Repo{}
 	var err = s.run("POST", path, nil, &result)
 	if err == nil {
@@ -59,6 +59,16 @@ func (s *RepoService) Enable(host, owner, name string) error {
 	var path string
 	if s.isServer04 {
 		path = fmt.Sprintf("/api/repos/%s/%s", owner, name)
+	} else {
+		path = fmt.Sprintf("/api/repos/%s/%s/%s", host, owner, name)
+	}
+	return s.run("POST", path, nil, nil)
+}
+
+func (s *RepoService) EnableWithActivate(host, owner, name string, activate bool) error {
+	var path string
+	if s.isServer04 {
+		path = fmt.Sprintf("/api/repos/%s/%s?no-activate=%v", owner, name, !activate)
 	} else {
 		path = fmt.Sprintf("/api/repos/%s/%s/%s", host, owner, name)
 	}
