@@ -43,36 +43,52 @@ func (s *RepoService) Create(owner, name string) (*Repo, error) {
 
 // PUT /api/repos/{host}/{owner}/{name}
 func (s *RepoService) Update(repo *Repo) (*Repo, error) {
-	var path string
+	var path, method string
 	if s.isServer04 {
 		path = fmt.Sprintf("/api/repos/%s/%s", repo.Owner, repo.Name)
+		method = "PATCH"
 	} else {
 		path = fmt.Sprintf("/api/repos/%s/%s/%s", repo.Host, repo.Owner, repo.Name)
+		method = "PUT"
 	}
 	var result = Repo{}
-	var err = s.run("PUT", path, &repo, &result)
+	var err = s.run(method, path, &repo, &result)
 	return &result, err
 }
 
 // POST /api/repos/{host}/{owner}/{name}
-func (s *RepoService) Enable(host, owner, name string) error {
+func (s *RepoService) Enable(host, owner, name string) (*Repo, error) {
 	var path string
 	if s.isServer04 {
 		path = fmt.Sprintf("/api/repos/%s/%s", owner, name)
 	} else {
 		path = fmt.Sprintf("/api/repos/%s/%s/%s", host, owner, name)
 	}
-	return s.run("POST", path, nil, nil)
+	var result = Repo{}
+	var err error
+	err = s.run("POST", path, nil, &result)
+	if err != nil {
+		return nil, err
+	} else {
+		return &result, nil
+	}
 }
 
-func (s *RepoService) EnableWithActivate(host, owner, name string, activate bool) error {
+func (s *RepoService) EnableWithActivate(host, owner, name string, activate bool) (*Repo, error) {
 	var path string
 	if s.isServer04 {
 		path = fmt.Sprintf("/api/repos/%s/%s?no-activate=%v", owner, name, !activate)
 	} else {
 		path = fmt.Sprintf("/api/repos/%s/%s/%s", host, owner, name)
 	}
-	return s.run("POST", path, nil, nil)
+	var result = Repo{}
+	var err error
+	err = s.run("POST", path, nil, &result)
+	if err != nil {
+		return nil, err
+	} else {
+		return &result, err
+	}
 }
 
 // POST /api/repos/{host}/{owner}/{name}/deactivate
@@ -113,17 +129,19 @@ func (s *RepoService) SetKey(host, owner, name, pub, priv string) error {
 }
 
 // PUT /api/repos/{host}/{owner}/{name}
-func (s *RepoService) SetParams(host, owner, name, params string) error {
-	var path string
+func (s *RepoService) SetParams(host, owner, name, params interface{}) error {
+	var path, method string
 	if s.isServer04 {
 		path = fmt.Sprintf("/api/repos/%s/%s", owner, name)
+		method = "PATCH"
 	} else {
 		path = fmt.Sprintf("/api/repos/%s/%s/%s", host, owner, name)
+		method = "PUT"
 	}
 	var in = struct {
-		Params string `json:"params"`
+		Params interface{} `json:"params"`
 	}{params}
-	return s.run("PUT", path, &in, nil)
+	return s.run(method, path, &in, nil)
 }
 
 // GET /api/user/repos

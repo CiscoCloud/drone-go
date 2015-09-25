@@ -34,6 +34,7 @@ type Repo struct {
 	Timeout     int64  `json:"timeout"`
 	Created     int64  `json:"created_at"`
 	Updated     int64  `json:"updated_at"`
+	HookToken   string `json:"hook_token"`
 }
 
 type Commit struct {
