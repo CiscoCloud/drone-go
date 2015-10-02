@@ -41,7 +41,7 @@ func (s *UserService) Sync() error {
 func (s *UserService) Create(remote, login string, in interface{}) (*User, error) {
 	var path string
 	if s.isServer04 {
-		path = fmt.Sprintf("/api/users/%s", login)
+		path = fmt.Sprintf("/api/users")
 	} else {
 		path = fmt.Sprintf("/api/users/%s/%s", remote, login)
 	}
