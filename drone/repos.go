@@ -58,12 +58,10 @@ func (s *RepoService) Update(repo *Repo) (*Repo, error) {
 
 // POST /api/repos/{host}/{owner}/{name}
 func (s *RepoService) Enable(host, owner, name string) (*Repo, error) {
-	var path string
 	if s.isServer04 {
-		path = fmt.Sprintf("/api/repos/%s/%s", owner, name)
-	} else {
-		path = fmt.Sprintf("/api/repos/%s/%s/%s", host, owner, name)
+		return nil, nil
 	}
+	path := fmt.Sprintf("/api/repos/%s/%s/%s", host, owner, name)
 	var result = Repo{}
 	var err error
 	err = s.run("POST", path, nil, &result)
