@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -136,16 +137,14 @@ func (c *Client) run(method, path string, in, out interface{}) error {
 
 	// Decode the JSON response
 	if out != nil {
-		err = json.NewDecoder(resp.Body).Decode(out)
+		respBody, err := ioutil.ReadAll(resp.Body)
+		if err != nil {
+			return errors.New(fmt.Sprintf("Error reading response body: %s", err))
+		}
+		err = json.Marshal(respBody, out)
 		if err != nil {
 			if outStr, ok := out.(*string); ok {
-				defer resp.Body.Close()
-				contents, err := ioutil.ReadAll(resp.Body)
-				if err != nil {
-					return err
-				} else {
-					*outStr = string(contents[:])
-				}
+				*outStr = string(contents[:])
 			} else {
 				return err
 			}
