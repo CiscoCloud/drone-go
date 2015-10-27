@@ -3,7 +3,7 @@ package drone
 import (
 	"errors"
 	"fmt"
-	"github.com/CiscoCloud/shipped-api/Godeps/_workspace/src/gopkg.in/yaml.v2"
+	"gopkg.in/yaml.v2"
 )
 
 type RepoService struct {
