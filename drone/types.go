@@ -77,6 +77,10 @@ type Build struct {
 	Link      string `json:"link_url"`
 }
 
+type Secrets struct {
+	Environment []string `yaml:"environment"`
+}
+
 // Returns the Short (--short) Commit Hash.
 func (c *Commit) ShaShort() string {
 	if len(c.Sha) > 8 {

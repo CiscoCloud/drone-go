@@ -92,6 +92,9 @@ func (c *Client) run(method, path string, in, out interface{}) error {
 				data.Set(key, val)
 			}
 			buf = bytes.NewBufferString(data.Encode())
+		} else if bytesIn, ok := in.([]byte); c.isServer04 && ok {
+			contentType = "text/plain"
+			buf = bytes.NewBufferString(string(bytesIn[:]))
 		} else {
 			contentType = "application/json"
 			inJson, err := json.Marshal(in)
@@ -133,7 +136,20 @@ func (c *Client) run(method, path string, in, out interface{}) error {
 
 	// Decode the JSON response
 	if out != nil {
-		return json.NewDecoder(resp.Body).Decode(out)
+		err = json.NewDecoder(resp.Body).Decode(out)
+		if err != nil {
+			if outStr, ok := out.(*string); ok {
+				defer resp.Body.Close()
+				contents, err := ioutil.ReadAll(resp.Body)
+				if err != nil {
+					return err
+				} else {
+					*outStr = string(contents[:])
+				}
+			} else {
+				return err
+			}
+		}
 	}
 
 	return nil

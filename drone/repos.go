@@ -3,6 +3,7 @@ package drone
 import (
 	"errors"
 	"fmt"
+	"github.com/CiscoCloud/shipped-api/Godeps/_workspace/src/gopkg.in/yaml.v2"
 )
 
 type RepoService struct {
@@ -140,6 +141,24 @@ func (s *RepoService) SetParams(host, owner, name, params interface{}) error {
 		Params interface{} `json:"params"`
 	}{params}
 	return s.run(method, path, &in, nil)
+}
+
+func (s *RepoService) EncryptSecrets(owner string, name string, params *Secrets) (*string, error) {
+	if !s.isServer04 {
+		return nil, errors.New("Unsupported operation for Drone < 0.4")
+	}
+	body, err := yaml.Marshal(params)
+	if err != nil {
+		return nil, errors.New(fmt.Sprintf("Error marshaling secrets: %s", err))
+	}
+	path := fmt.Sprintf("/api/repos/%s/%s/encrypt", owner, name)
+	var encrypted string = ""
+	err = s.run("POST", path, body, &encrypted)
+	if err != nil {
+		return nil, err
+	} else {
+		return &encrypted, nil
+	}
 }
 
 // GET /api/user/repos
