@@ -141,10 +141,10 @@ func (c *Client) run(method, path string, in, out interface{}) error {
 		if err != nil {
 			return errors.New(fmt.Sprintf("Error reading response body: %s", err))
 		}
-		err = json.Marshal(respBody, out)
+		err = json.Unmarshal(respBody, out)
 		if err != nil {
 			if outStr, ok := out.(*string); ok {
-				*outStr = string(contents[:])
+				*outStr = string(respBody[:])
 			} else {
 				return err
 			}
