@@ -131,8 +131,7 @@ func (s *RepoService) SetKey(host, owner, name, pub, priv string) error {
 func (s *RepoService) SetParams(host, owner, name, params interface{}) error {
 	var path, method string
 	if s.isServer04 {
-		path = fmt.Sprintf("/api/repos/%s/%s", owner, name)
-		method = "PATCH"
+		return errors.New("Unsupported operation for Drone 0.4")
 	} else {
 		path = fmt.Sprintf("/api/repos/%s/%s/%s", host, owner, name)
 		method = "PUT"
