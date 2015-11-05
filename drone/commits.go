@@ -27,7 +27,7 @@ func (s *CommitService) Get(host, owner, name, branch, sha string) (*Commit, err
 func (s *CommitService) GetOutput(host, owner, name, branch, sha string) (io.ReadCloser, error) {
 	var path string
 	if s.isServer04 {
-		path = fmt.Sprintf("/api/repos/%s/%s/logs/%s", owner, name, sha)
+		path = fmt.Sprintf("/api/repos/%s/%s/logs/1", owner, name)
 	} else {
 		path = fmt.Sprintf("/api/repos/%s/%s/%s/branches/%s/commits/%s/console", host, owner, name, branch, sha)
 	}
