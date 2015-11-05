@@ -39,10 +39,11 @@ func (s *CommitService) GetOutput(host, owner, name, branch, sha, build_number s
 }
 
 // POST /api/repos/{host}/{owner}/{name}/branches/{branch}/commits/{commit}?action=rebuild
-func (s *CommitService) Rebuild(host, owner, name, branch, sha string) error {
+// POST /api/repos/{owner}/{name}/builds/{build_number}
+func (s *CommitService) Rebuild(host, owner, name, branch, sha, build_number string) error {
 	var path string
 	if s.isServer04 {
-		path = fmt.Sprintf("/api/repos/%s/%s/builds/%s", owner, name, sha)
+		path = fmt.Sprintf("/api/repos/%s/%s/builds/%s", owner, name, build_number)
 	} else {
 		path = fmt.Sprintf("/api/repos/%s/%s/%s/branches/%s/commits/%s?action=rebuild", host, owner, name, branch, sha)
 	}
