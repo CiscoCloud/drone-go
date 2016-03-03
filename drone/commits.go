@@ -33,7 +33,7 @@ func (s *CommitService) GetOutput(host, owner, name, branch, sha, build_number s
 	}
 	resp, err := s.do("GET", path)
 	if err != nil {
-		return nil, nil
+		return nil, err
 	}
 	return resp.Body, nil
 }
