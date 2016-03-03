@@ -38,6 +38,21 @@ func (s *CommitService) GetOutput(host, owner, name, branch, sha, build_number s
 	return resp.Body, nil
 }
 
+// GET /api/stream/{owner}/{name}/{build}/1
+func (s *CommitService) GetOutputStream(owner, name, build_number string) (io.ReadCloser, error) {
+	var path string
+	if s.isServer04 {
+		path = fmt.Sprintf("/api/stream/%s/%s/%s/1", owner, name, build_number)
+	} else {
+		return nil, errors.New("Unsupported operation")
+	}
+	resp, err := s.do("GET", path)
+	if err != nil {
+		return nil, err
+	}
+	return resp.Body, nil
+}
+
 // POST /api/repos/{host}/{owner}/{name}/branches/{branch}/commits/{commit}?action=rebuild
 // POST /api/repos/{owner}/{name}/builds/{build_number}
 func (s *CommitService) Rebuild(host, owner, name, branch, sha, build_number string) error {
