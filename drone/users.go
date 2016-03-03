@@ -53,6 +53,16 @@ func (s *UserService) Create(remote, login string, in interface{}) (*User, error
 	return &user, err
 }
 
+func (s *UserService) Patch(login string, in interface{}) (*User, error) {
+	var path string
+
+	path = fmt.Sprintf("/api/users/%s", login)
+
+	var user = User{}
+	var err = s.run("PATCH", path, in, &user)
+	return &user, err
+}
+
 // DELETE /api/users/{host}/{login}
 func (s *UserService) Delete(remote, login string) error {
 	var path string
