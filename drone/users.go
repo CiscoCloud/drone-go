@@ -9,13 +9,8 @@ type UserService struct {
 }
 
 // GET /api/users/{host}/{login}
-func (s *UserService) Get(remote, login string) (*User, error) {
-	var path string
-	if s.isServer04 {
-		path = fmt.Sprintf("/api/users/%s", login)
-	} else {
-		path = fmt.Sprintf("/api/users/%s/%s", remote, login)
-	}
+func (s *UserService) Get(login string) (*User, error) {
+	var path = fmt.Sprintf("/api/users/%s", login)
 	var user = User{}
 	var err = s.run("GET", path, nil, &user)
 	return &user, err
